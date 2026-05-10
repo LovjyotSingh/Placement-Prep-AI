@@ -1,0 +1,118 @@
+# 🚀 HOW TO RUN YOUR PROJECT (Step by Step)
+# =============================================
+# Read this FIRST before doing anything else!
+# =============================================
+
+# ──────────────────────────────────────────────
+# STEP 1 — Install Node.js (One time only)
+# ──────────────────────────────────────────────
+# Go to: https://nodejs.org
+# Download "LTS" version and install it.
+# After install, open terminal/command prompt and verify:
+#   node --version    ← should show v18 or v20
+#   npm --version     ← should show 9 or 10
+
+
+# ──────────────────────────────────────────────
+# STEP 2 — Get FREE Gemini AI Key (One time only)
+# ──────────────────────────────────────────────
+# 1. Go to: https://aistudio.google.com
+# 2. Sign in with your Google account
+# 3. Click "Get API key"
+# 4. Click "Create API key"
+# 5. Copy the key (starts with AIza...)
+# Save it — you need it in Step 5!
+
+
+# ──────────────────────────────────────────────
+# STEP 3 — Get FREE MongoDB (One time only)
+# ──────────────────────────────────────────────
+# 1. Go to: https://www.mongodb.com/cloud/atlas
+# 2. Sign up for free
+# 3. Create a FREE cluster (M0 tier)
+# 4. Database Access → Add User → save username + password
+# 5. Network Access → Add IP → Allow from Anywhere
+# 6. Clusters → Connect → Drivers → Copy connection string
+#    It looks like: mongodb+srv://username:password@cluster.mongodb.net/
+# Save it — you need it in Step 5!
+
+
+# ──────────────────────────────────────────────
+# STEP 4 — Install project packages
+# ──────────────────────────────────────────────
+# Open terminal in the 'backend' folder and run:
+    cd backend
+    npm install
+
+# Open ANOTHER terminal in the 'frontend' folder and run:
+    cd frontend
+    npm install
+
+
+# ──────────────────────────────────────────────
+# STEP 5 — Create your .env file (backend only)
+# ──────────────────────────────────────────────
+# In the backend folder, create a file called exactly:  .env
+# (Note: no filename before the dot — just .env)
+# Copy-paste this into it and fill in YOUR values:
+
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/placement-prep
+JWT_SECRET=anyRandomString12345YouMakeThisUp
+JWT_REFRESH_SECRET=anotherRandomString67890YouMakeThisUp
+AI_PROVIDER=gemini
+AI_API_KEY=AIzaSyYOUR_ACTUAL_GEMINI_KEY_HERE
+AI_MODEL=gemini-pro
+FRONTEND_URL=http://localhost:5173
+
+
+# ──────────────────────────────────────────────
+# STEP 6 — Run the project!
+# ──────────────────────────────────────────────
+
+# Terminal 1 — Start backend:
+    cd backend
+    npm run dev
+    # You should see: ✅ MongoDB Connected
+    # You should see: 🚀 Server running on port 5000
+
+# Terminal 2 — Start frontend:
+    cd frontend
+    npm run dev
+    # You should see: Local: http://localhost:5173
+
+# Then open your browser and go to: http://localhost:5173
+# Your app is running! 🎉
+
+
+# ──────────────────────────────────────────────
+# COMMON PROBLEMS & FIXES
+# ──────────────────────────────────────────────
+
+# Problem: "MongoDB connection failed"
+# Fix: Check your MONGODB_URI in .env — replace password correctly
+#      Also check Network Access in MongoDB Atlas (allow all IPs)
+
+# Problem: "AI_API_KEY not set"
+# Fix: Make sure your .env file has AI_API_KEY= with your Gemini key
+
+# Problem: "npm install" errors
+# Fix: Delete the node_modules folder and try npm install again
+
+# Problem: Frontend can't talk to backend
+# Fix: Make sure BOTH terminals are running (backend on 5000, frontend on 5173)
+
+# Problem: Port 5000 is already in use
+# Fix: Change PORT=5001 in .env and also update frontend/.env:
+#      VITE_API_URL=http://localhost:5001/api
+
+
+# ──────────────────────────────────────────────
+# FREE SERVICES USED (Zero Cost!)
+# ──────────────────────────────────────────────
+# ✅ Google Gemini AI   → https://aistudio.google.com   (FREE - no card needed)
+# ✅ MongoDB Atlas      → https://mongodb.com/atlas      (FREE 512MB)
+# ✅ Render             → https://render.com             (FREE hosting)
+# ✅ Vercel             → https://vercel.com             (FREE hosting)
+# Total cost: $0/month! 🎉
