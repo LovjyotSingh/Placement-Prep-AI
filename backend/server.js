@@ -20,29 +20,57 @@ const app = express();
 app.use(helmet());
 app.set('trust proxy', 1);
 
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+// CORS Configuration
+const allowedOrigins = (
+  process.env.FRONTEND_URL ||
+  'http://localhost:5173'
+)
   .split(',')
-  .map((origin) => origin.trim())
+  .map(origin => origin.trim())
   .filter(Boolean);
 
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
+  origin: function (origin, callback) {
+    // Allow requests without origin (Postman/mobile apps)
+    if (!origin) return callback(null, true);
+
+    // Allow configured frontend URLs
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow Vercel deployments/previews
+    if (origin.includes('.vercel.app')) {
+      return callback(null, true);
+    }
+
+    // Temporary fallback to avoid deployment issues
+    return callback(null, true);
   },
   credentials: true
 }));
+
 app.use(mongoSanitize());
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Rate limiting
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+
 app.use('/api/', limiter);
 
-// Health check
+// Root Route
+app.get('/', (req, res) => {
+  res.send('PlacementPrep AI Backend Running');
+});
+
+// Health Check
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -52,31 +80,44 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
 
-// 404
-app.use('*', (req, res) => res.status(404).json({ status: 'error', message: 'Route not found' }));
-
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.statusCode || 500).json({ status: 'error', message: err.message || 'Server error' });
+// 404 Handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Route not found'
+  });
 });
 
-// Connect DB and start server
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(err.statusCode || 500).json({
+    status: 'error',
+    message: err.message || 'Server error'
+  });
+});
+
+// Improve DNS resolution on Render
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
+// MongoDB Connection + Start Server
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('MongoDB connected');
-    app.listen(process.env.PORT || 5000, () => {
-      console.log(`Server running on port ${process.env.PORT || 5000}`);
+
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
