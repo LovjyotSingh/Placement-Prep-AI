@@ -106,7 +106,7 @@ export default function Layout({ children, showNav = true }) {
       <footer className="border-t border-white/70 bg-white/60 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-4 py-6 text-sm text-gray-500 sm:flex-row sm:items-center sm:px-6">
           <div>
-            Copyright {new Date().getFullYear()} <span className="font-semibold text-gray-700">PlacementPrep AI</span>
+            Copyright © 2026 Lovjyot Singh | <span className="font-semibold text-gray-700">PlacementPrep AI</span>
           </div>
           <div className="text-xs">Practice smarter. Walk in sharper.</div>
         </div>
