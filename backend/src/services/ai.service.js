@@ -148,7 +148,7 @@ async function callOpenRouter(prompt, options = {}) {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error('AI_API_KEY not set in .env file');
 
-  const model = process.env.AI_MODEL || 'openai/gpt-4o-mini';
+  const model = process.env.AI_MODEL || 'openai/free';
   const temperature = Number.isFinite(options.temperature) ? options.temperature : 0.7;
   const maxTokens = Number.isFinite(options.maxTokens) ? options.maxTokens : 2000;
   const url = `${OPENROUTER_API_BASE}/chat/completions`;
